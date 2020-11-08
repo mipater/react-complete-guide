@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Auxiliary';
 
 // const StyledButton = styled.button`
 //   color: white;
@@ -32,7 +34,8 @@ class App extends Component {
     ],
     otherState: 'some other value',
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    changeCounter: 0
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -76,7 +79,12 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({ persons: persons });
+    this.setState((prevState, props) => {
+      return { 
+        persons: persons, 
+        changeCounter: ++prevState.changeCounter 
+      }
+    });
   }
 
   togglePersonsHandler = () => {
@@ -100,19 +108,19 @@ class App extends Component {
     }
 
     return (
-      <div className={classes.App}>
-        <button onClick={()=> this.setState({showCockpit: !this.state.showCockpit})}>Remove Cockpit</button>
-{  this.state.showCockpit ?       <Cockpit
-          title={this.props.appTitle}
-          persons={this.state.persons}
-          showPersons={this.state.showPersons}
-          clicked={this.togglePersonsHandler}
-        ></Cockpit> : null} 
-        {persons}
-      </div>
+      <Aux>
+          <button onClick={()=> this.setState({showCockpit: !this.state.showCockpit})}>Remove Cockpit</button>
+  {  this.state.showCockpit ?       <Cockpit
+            title={this.props.appTitle}
+            personsLength={this.state.persons.length}
+            showPersons={this.state.showPersons}
+            clicked={this.togglePersonsHandler}
+          ></Cockpit> : null} 
+          {persons}
+      </Aux>
     );
     // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hi i\'m React App!!!'));
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
