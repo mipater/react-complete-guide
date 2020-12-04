@@ -118,15 +118,19 @@ class App extends Component {
     return (
       <Aux>
         <button onClick={() => this.setState({ showCockpit: !this.state.showCockpit })}>Remove Cockpit</button>
-        <AuthContext.Provider>
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler
+          }}
+        >
           {this.state.showCockpit ?
             <Cockpit
               title={this.props.appTitle}
               personsLength={this.state.persons.length}
               showPersons={this.state.showPersons}
               clicked={this.togglePersonsHandler}
-              login={this.loginHandler}
-            ></Cockpit> : null}
+            /> : null}
           {persons}
         </AuthContext.Provider>
       </Aux>
